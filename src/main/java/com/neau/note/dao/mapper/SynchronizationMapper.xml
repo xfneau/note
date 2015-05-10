@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Note">
+
+	<select id="getNoteByUserId" parameterType="int" resultType="Note">
+		SELECT * FROM notes where userid=#{id}
+	</select>
+
+	<insert id="insertNoteByUserId" parameterType="list">
+		<selectKey resultType="int" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into notes
+		(title,content,time,isclock,clocktime,category,userid,groupid) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.title},#{item.content},#{item.time},#{item.isclock},#{item.clocktime},#{item.category},#{item.userid},#{item.groupid})
+		</foreach>
+	</insert>
+
+	<delete id="remove" parameterType="int">
+		delete from notes where userid=#{userid}
+	</delete>
+
+</mapper>

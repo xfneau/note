@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置文件改了以后不用重新启动 -->
+	<constant name="struts.devMode" value="true" />
+
+	<!-- 把struts的请求委托给spring管理, 作用:创建Action实例的过程由spring处理,其他的还是有struts2自己处理 -->
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+	<package name="Android" extends="struts-default">
+
+		<action name="login_*" method="{1}" class="loginAction">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="synch_*" method="{1}" class="synchronizationDateAction">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="resetsendMail" method="sendMail" class="resetPasswd">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="resetpasswd" method="passwd" class="resetPasswd">
+			<result name="success" type="freemarker">resetPasswd.ftl</result>
+		</action>
+	</package>
+
+	<package name="default" extends="struts-default">
+
+		<interceptors>
+			<interceptor name="securitynologin" class="securityInterceptorNoLogin" />
+			<interceptor-stack name="SecurityStack">
+				<interceptor-ref name="securitynologin" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="SecurityStack"></default-interceptor-ref>
+
+		<default-action-ref name="index"></default-action-ref>
+
+		<global-results>
+			<result name="login" type="redirect">index</result>
+		</global-results>
+
+
+		<action name="index" method="getOneQuote" class="quotesAction">
+			<result name="success" type="freemarker">index.ftl</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<action name="login" class="indexAction">
+			<result name="success" type="freemarker">index.ftl</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<!-- <action name="index" class="indexAction"> <result name="success" type="freemarker">/examples/index.html</result> 
+			<interceptor-ref name="defaultStack"></interceptor-ref> </action> -->
+
+	</package>
+
+	<package name="groupmanageajax" extends="json-default"
+		namespace="/ajax">
+
+		<action name="register" method="signUp" class="loginAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+
+		<action name="getAllAdmin" method="getAllAdmin" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="delAdmin" method="delAdmin" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="addAdmin" method="addAdmin" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="alterPasswd" method="alterPasswd" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="getAllUser" method="getAllUser" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="getUserLength" method="getUserLength" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="getNoteLength" method="getNoteLength" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="delUser" method="delUser" class="adminAction">
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+	</package>
+
+
+	<package name="admin" extends="struts-default">
+
+		<interceptors>
+			<interceptor name="securitynologin" class="securityInterceptorAdmin" />
+			<interceptor-stack name="SecurityStack">
+				<interceptor-ref name="securitynologin" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="SecurityStack"></default-interceptor-ref>
+
+		<global-results>
+			<result name="adminLogin" type="redirect">adminIndex</result>
+		</global-results>
+
+		<action name="admin">
+			<result type="freemarker">adminIndex.ftl</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<action name="getLogin" method="getLogin" class="adminAction">
+			<result name="success" type="freemarker">admin.ftl</result>
+			<result name="normal" type="freemarker">normal.ftl</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<action name="amdinsignUp" method="signUp" class="adminAction">
+			<result name="success" type="freemarker">admin.ftl</result>
+		</action>
+
+	</package>
+
+</struts>

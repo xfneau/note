@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置文件改了以后不用重新启动 -->
+	<constant name="struts.devMode" value="true" />
+
+	<!-- 把struts的请求委托给spring管理, 作用:创建Action实例的过程由spring处理,其他的还是有struts2自己处理 -->
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+	<package name="Android" extends="struts-default">
+		<action name="login_*" method="{1}" class="loginAction">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="synch_*" method="{1}" class="synchronizationDateAction">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="resetsendMail" method="sendMail" class="resetPasswd">
+			<result name="success" type="freemarker">android.ftl</result>
+		</action>
+
+		<action name="resetpasswd" method="passwd" class="resetPasswd">
+			<result name="success" type="freemarker">resetPasswd.ftl</result>
+		</action>
+	</package>
+
+	<package name="default" extends="struts-default">
+		<interceptors>
+			<interceptor name="securitynologin" class="securityInterceptorNoLogin" />
+			<interceptor-stack name="SecurityStack">
+				<interceptor-ref name="securitynologin" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="SecurityStack"></default-interceptor-ref>
+		<default-action-ref name="index"></default-action-ref>
+		<global-results>
+			<result name="login" type="redirect">index</result>
+		</global-results>
+
+		<action name="index" method="getOneQuote" class="quotesAction">
+			<result name="success" type="freemarker">index.ftl</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<!-- <action name="index" class="indexAction"> <result name="success" type="freemarker">/examples/index.html</result> 
+			<interceptor-ref name="defaultStack"></interceptor-ref> </action> -->
+	</package>
+
+	<package name="groupmanageajax" extends="json-default"
+		namespace="/ajax">
+
+		<action name="register" class="loginAction" method="signUp">
+			<result name="success" type="json">
+				<param name="root">jsonStr</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

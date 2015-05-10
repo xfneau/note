@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+
+    <typeAliases>  
+        <typeAlias alias="User" type="com.neau.note.pojo.User"/>  
+        <typeAlias alias="Note" type="com.neau.note.pojo.Note"/> 
+        <typeAlias alias="Quotes" type="com.neau.note.pojo.Quotes"/>  
+        <typeAlias alias="Admin" type="com.neau.note.pojo.Admin"/>  
+    </typeAliases>  
+      
+    <!-- 指定映射文件 -->  
+    <mappers>  
+        <mapper resource="com/neau/note/dao/mapper/UserMapper.xml" />  
+        <mapper resource="com/neau/note/dao/mapper/SynchronizationMapper.xml" /> 
+        <mapper resource="com/neau/note/dao/mapper/ResetPasswd.xml" />  
+        <mapper resource="com/neau/note/dao/mapper/QuotesMapper.xml" /> 
+        <mapper resource="com/neau/note/dao/mapper/AdminMapper.xml" />  
+    </mappers>  
+</configuration> 
