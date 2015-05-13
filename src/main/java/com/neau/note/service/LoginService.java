@@ -35,7 +35,7 @@ public class LoginService {
 	 * @param password
 	 * @return
 	 */
-	public String getLogin(String username, String password) {
+	public Map<String, Object> getLogin(String username, String password) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Content.result, Content.failure);
 		try {
@@ -61,7 +61,7 @@ public class LoginService {
 			logger.info(e);
 			e.printStackTrace();
 		}
-		return JSONObject.fromObject(map).toString();
+		return map;
 	}
 
 	/**

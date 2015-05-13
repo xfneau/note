@@ -1,9 +1,15 @@
 package com.neau.note.action;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -11,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.neau.note.service.LoginService;
+import com.neau.note.utils.Content;
 
 /**
  * 
@@ -41,8 +48,8 @@ public class LoginAction extends BaseAction {
 	 * @return
 	 */
 	public String getLogin() {
-
-		result = loginService.getLogin(username, password);
+		Map<String, Object> map = loginService.getLogin(username, password);
+		 result = JSONObject.fromObject(map).toString();
 		return SUCCESS;
 	}
 
@@ -50,7 +57,7 @@ public class LoginAction extends BaseAction {
 	 * 注册
 	 * @throws IOException 
 	 */
-	public String signUp() throws IOException {
+	public String signUp() {
 
 		System.out.println(username);
 		result = loginService.signUp(username, password, email, sex);
@@ -69,6 +76,16 @@ public class LoginAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String loginout(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpSession session = request.getSession();
+		session.removeAttribute(Content.SessionKey);
+		Cookie cookieA = new Cookie(Content.SessionKey, null);
+		cookieA.setPath("/");
+		cookieA.setMaxAge(0);
+		this.getServletResponse().addCookie(cookieA);
+		return "adminLogin";
+	}
 	public String getResult() {
 		return result;
 	}

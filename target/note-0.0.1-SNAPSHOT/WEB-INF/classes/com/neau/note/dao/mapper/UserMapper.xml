@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+
+	<select id="getUserByUserId" parameterType="String" resultType="User">
+		SELECT * FROM user where id=#{userid}
+	</select>
+
+	<select id="getUserByUserName" parameterType="String"
+		resultType="User">
+		SELECT * FROM user where username = #{username}
+	</select>
+
+	<select id="getSumNote" parameterType="int" resultType="int">
+		select count(id) from notes where userid=#{userid}
+	</select>
+	
+	<select id="getUserByUsernamePassword" parameterType="map" resultType="User">
+		select * from user 
+		<where>
+			<if test="username!=null">
+			username=#{username}
+			</if>
+			<if test="username!=null">
+			 and username=#{username}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertUser" parameterType="Map" keyProperty="id" useGeneratedKeys="true">
+		insert into user(username,password,email,sex,total,lasttime,openkey)
+		values (#{username},#{password},#{email},#{sex},#{total},#{lasttime},#{openkey})
+	</insert>
+	
+	<update id="updateUserByUserid" parameterType="User">
+		update user
+		<set>
+			<if test="username!=null">
+				username=#{username},
+			</if>
+			<if test="password!=null">
+				password=#{password},
+			</if>
+			<if test="sex!=null">
+				sex=#{sex},
+			</if>
+			<if test="email!=null">
+				email=#{email},
+			</if>
+			<if test="lasttime!=null">
+				lasttime=#{lasttime},
+			</if>
+			<if test="openkey!=null">
+				openkey=#{openkey},
+			</if>			
+		</set>
+		
+		<where>
+			<if test="id!=null">
+				id=#{id}
+			</if>
+		</where>
+	</update>
+	
+	
+</mapper>

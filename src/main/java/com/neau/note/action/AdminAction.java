@@ -1,12 +1,18 @@
 package com.neau.note.action;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.struts2.ServletActionContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +40,22 @@ public class AdminAction extends BaseAction {
 	
 	private String oldpwd;
 	
+	private String type;
+	
+	private String author;
+	
+	private String context;
+	
+	private String downloadFileName;
+	
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
 	private String newpwd;
 	
 	private int id;
@@ -43,6 +65,16 @@ public class AdminAction extends BaseAction {
 	
 	public String getLogin(){
 		id = adminService.getLogin(username, password);
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpSession session = request.getSession();
+		if( id > 0 ){
+			session.setAttribute(Content.SessionKey, username);
+			Cookie cookieA = new Cookie(Content.SessionKey, username);
+			cookieA.setPath("/");
+			cookieA.setMaxAge(Integer.MAX_VALUE);
+			this.getServletResponse().addCookie(cookieA);
+			logger.info("add user cookie");
+		}
 		if( id == -1 ){
 			return Content.adminLogin;
 		} else if( id == 0 ){
@@ -54,7 +86,7 @@ public class AdminAction extends BaseAction {
 	}
 
 	public String getAllAdmin(){
-		adminList = adminService.getAllAdmin();
+		adminList = adminService.getAllAdmin(id);
 		result = JSONArray.fromObject(adminList).toString();
 		return SUCCESS;
 	}
@@ -79,8 +111,37 @@ public class AdminAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	public String getAllQuotes(){
+		result = adminService.getAllQuotes(id);
+		return SUCCESS;
+	}
+	public String getAllAdvi(){
+		result = adminService.getAllAdvi(id);
+		return SUCCESS;
+	}
+	
+	public String addAdvise(){
+		result = adminService.addAdvise(username,context);
+		return SUCCESS;
+	}
+	
+	public String addQuote(){
+		result = adminService.addQuote(type,context,author);
+		return SUCCESS;
+	}
+	
+	public String searchUser(){
+		result = adminService.searchUser(context);
+		return SUCCESS;
+	}
+	
 	public String delUser(){
 		result = adminService.delUser(id);
+		return SUCCESS;
+	}
+	
+	public String deleteQuotes(){
+		result = adminService.deleteQuotes(id);
 		return SUCCESS;
 	}
 	
@@ -99,8 +160,14 @@ public class AdminAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	public String getQuoteLength(){
+		result = adminService.getQuoteLength();
+		return SUCCESS;
+	}
 	
-	
+	public String download(){
+		return SUCCESS;
+	}
 	public String getOldpwd() {
 		return oldpwd;
 	}
@@ -173,6 +240,34 @@ public class AdminAction extends BaseAction {
 
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getDownloadFileName() {
+		return this.downloadFileName;
+	}
+	
+	public InputStream getDownloadFile(){
+		return ServletActionContext.getServletContext().getResourceAsStream("/app/" + downloadFileName); 
+	}
+
+	public void setDownloadFileName(String downloadFileName) {
+		this.downloadFileName = downloadFileName;
 	}
 	
 	

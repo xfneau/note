@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Reset">
+
+	<select id="getUserByEmail" parameterType="string" resultType="User">
+		SELECT * FROM user where email=#{email}
+	</select>
+
+
+	<update id="updatePasswd" parameterType="User">
+		update user 
+		<set>
+			<if test="password!=null">
+				password=#{password}
+			</if>
+		</set>
+		<where>
+			<if test="id!=null">
+				id=#{id}
+			</if>
+		</where>
+	</update>
+</mapper>

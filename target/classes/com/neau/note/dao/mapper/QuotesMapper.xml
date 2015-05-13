@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Quotes">
+
+	<select id="getAllQuotes" resultType="Quotes">
+		SELECT * FROM quotes
+	</select>
+
+
+	<insert id="updateQuotes" parameterType="Quotes">
+		insert into quotes(content,author,type) values (#{content},#{author},#{type})
+	</insert>
+</mapper>

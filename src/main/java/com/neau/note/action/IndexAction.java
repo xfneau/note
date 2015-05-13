@@ -1,5 +1,7 @@
 package com.neau.note.action;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -83,9 +85,8 @@ public class IndexAction extends BaseAction {
 							return Content.Login;
 						}
 					}else {
-						String login = loginService.getLogin(username, password);
-						JSONObject json = JSONObject.fromObject(login);
-						if ((Boolean) json.get("result")) {
+						Map<String, Object> map = loginService.getLogin(username, password);
+						if ((Boolean) map.get("result")) {
 							Cookie cookieA = new Cookie(Content.username, null);
 							cookieA.setPath("/");
 							cookieA.setMaxAge(0);
@@ -98,9 +99,8 @@ public class IndexAction extends BaseAction {
 					}
 				}
 			} else {
-				String login = loginService.getLogin(username, password);
-				JSONObject json = JSONObject.fromObject(login);
-				if ((Boolean) json.get("result")) {
+				Map<String, Object> map = loginService.getLogin(username, password);
+				if ((Boolean) map.get("result")) {
 					Cookie cookieA = new Cookie(Content.username, null);
 					cookieA.setPath("/");
 					cookieA.setMaxAge(0);

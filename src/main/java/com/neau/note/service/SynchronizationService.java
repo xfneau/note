@@ -31,6 +31,7 @@ public class SynchronizationService {
 
 	@Resource
 	LoginDao loginDaoImpl;
+	
 
 	public String recover(Integer userid, String sign) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -50,18 +51,24 @@ public class SynchronizationService {
 		return JSONObject.fromObject(map).toString();
 	}
 
-	public String backups(String list, String sign) {
+	public String backups(String list, String sign, String userid) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Content.result, Content.failure);
 		try {
 			Gson gson = new Gson();
 			List<Note> note = gson.fromJson(list, new TypeToken<List<Note>>() {
 			}.getType());
-			int id = note.get(0).getUserid();
+			int id = Integer.valueOf(userid);
+			for( Note n:note ){
+				n.setUserid(id);
+			}
 			User user = loginDaoImpl.getUserByUserid(id);
+			user.setTotal(note.size());
+			System.out.println(CipherUtils.hmacMd5Encode(user.getOpenkey(), list));
 			if (ValidateUtils.isValidate(user) && CipherUtils.hmacMd5Encode(user.getOpenkey(), list).equals(sign)) {
 				synchronizationDao.remove(id);
 				int ant = synchronizationDao.backups(note);
+				loginDaoImpl.updateUserByUserid(user);
 				if (ant > 0) {
 					map.put(Content.result, Content.success);
 					map.put(Content.response, ant);

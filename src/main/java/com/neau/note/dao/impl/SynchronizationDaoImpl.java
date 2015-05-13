@@ -23,7 +23,6 @@ public class SynchronizationDaoImpl implements SynchronizationDataDao {
 		try{
 			id = sqlSessionTemplate.insert("Note.insertNoteByUserId", list);
 		}catch(Exception e){
-			sqlSessionTemplate.rollback(true);
 			e.printStackTrace();
 		}
 		return id;

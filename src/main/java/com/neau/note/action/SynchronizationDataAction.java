@@ -27,7 +27,8 @@ public class SynchronizationDataAction extends BaseAction{
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String json = request.getParameter(Content.json);
 		String sign = request.getParameter(Content.sign);
-		result = synchronizationService.backups(json,sign);
+		String userid = request.getParameter(Content.userid);
+		result = synchronizationService.backups(json,sign,userid);
 		return SUCCESS;
 	}
 	

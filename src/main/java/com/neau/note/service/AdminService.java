@@ -12,8 +12,10 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.neau.note.dao.AdminDao;
+import com.neau.note.dao.Quotes;
 import com.neau.note.dao.SynchronizationDataDao;
 import com.neau.note.pojo.Admin;
+import com.neau.note.pojo.Advise;
 import com.neau.note.pojo.Note;
 import com.neau.note.pojo.User;
 import com.neau.note.utils.CipherUtils;
@@ -74,9 +76,9 @@ public class AdminService {
 		return JSONObject.fromObject(map).toString();
 	}
 
-	public List<Admin> getAllAdmin() {
+	public List<Admin> getAllAdmin(int id) {
 
-		return adminDaoImpl.getAllAdmin();
+		return adminDaoImpl.getAllAdmin(id);
 	}
 
 	public String alterPasswd(String oldpwd, String newpwd, String username) {
@@ -104,6 +106,47 @@ public class AdminService {
 		return JSONArray.fromObject(list).toString();
 	}
 	
+	public String getAllQuotes(int id) {
+
+		List<Quotes> list = adminDaoImpl.getAllQuotes(id);
+		return JSONArray.fromObject(list).toString();
+	}
+	
+	public String getAllAdvi(int id) {
+
+		List<Advise> list = adminDaoImpl.getAllAdvi(id);
+		return JSONArray.fromObject(list).toString();
+	}
+	
+	public String addAdvise(String username, String context) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Advise _map = new Advise();
+		_map.setUsername(username);
+		_map.setTime(System.currentTimeMillis());
+		_map.setContext(context);
+		map.put(Content.result, Content.failure);
+		int id = adminDaoImpl.addAdvise(_map);
+		if( id > 0 ){
+			map.put(Content.result, Content.success);
+		}
+		return JSONObject.fromObject(map).toString();
+	}
+	
+	public String addQuote(String type, String context, String author) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Quotes quote = new Quotes();
+		quote.setType(type);
+		quote.setContent(context);
+		quote.setAuthor(author);
+		quote.setTime(System.currentTimeMillis());
+		map.put(Content.result, Content.failure);
+		int id = adminDaoImpl.addQuote(quote);
+		if( id > 0 ){
+			map.put(Content.result, Content.success);
+		}
+		return JSONObject.fromObject(map).toString();
+	}
+	
 	public String delUser(int id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Content.result, Content.failure);
@@ -116,10 +159,28 @@ public class AdminService {
 		}
 		return JSONObject.fromObject(map).toString();
 	}
+	
+	public String deleteQuotes(int id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Content.result, Content.failure);
+		map.put(Content.response, Content.pwdError);
+		int raw = adminDaoImpl.deleteQuotes(id);
+		if( raw > 0 ){
+			synchronizationDao.remove(id);
+			map.put(Content.result, Content.success);
+			map.put(Content.response, Content.alterRight);
+		}
+		return JSONObject.fromObject(map).toString();
+	}
 
 	public String getAllNote(int id) {
 		
 		List<Note> list = adminDaoImpl.getAllNote(id);
+		return JSONArray.fromObject(list).toString();
+	}
+	
+	public String searchUser(String context){
+		List<User> list = adminDaoImpl.searchUser(context);
 		return JSONArray.fromObject(list).toString();
 	}
 	
@@ -141,6 +202,7 @@ public class AdminService {
 		map.put(Content.result, Content.failure);
 		map.put(Content.response, Content.pwdError);
 		int sum = adminDaoImpl.getNoteLength();
+		sum = (int) Math.ceil((double)sum/15);
 		if( sum > 0 ){
 			map.put(Content.result, Content.success);
 			map.put(Content.response, sum);
@@ -148,4 +210,16 @@ public class AdminService {
 		return JSONObject.fromObject(map).toString();
 	}
 
+	public String getQuoteLength() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Content.result, Content.failure);
+		map.put(Content.response, Content.pwdError);
+		int sum = adminDaoImpl.getQuoteLength();
+		sum = (int) Math.ceil((double)sum/15);
+		if( sum > 0 ){
+			map.put(Content.result, Content.success);
+			map.put(Content.response, sum);
+		}
+		return JSONObject.fromObject(map).toString();
+	}
 }
