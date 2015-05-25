@@ -1,5 +1,7 @@
 package com.neau.note.action;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +31,14 @@ public class SynchronizationDataAction extends BaseAction{
 		String sign = request.getParameter(Content.sign);
 		String userid = request.getParameter(Content.userid);
 		result = synchronizationService.backups(json,sign,userid);
+		return SUCCESS;
+	}
+	
+	public String _backUps(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String json = request.getParameter(Content.json);
+		Map map=request.getParameterMap();
+		result = synchronizationService._backUps(json);
 		return SUCCESS;
 	}
 	

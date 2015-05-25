@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.neau.note.dao.SynchronizationDataDao;
 import com.neau.note.pojo.Note;
+import com.neau.note.pojo.Sms;
 
 @Repository("synchronizationDao")
 public class SynchronizationDaoImpl implements SynchronizationDataDao {
@@ -48,6 +49,30 @@ public class SynchronizationDaoImpl implements SynchronizationDataDao {
 			sqlSessionTemplate.rollback(true);
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void _backUps(List<Sms> list) {
+		try{
+			for( Sms s:list ){
+				if( _getTest(s).size() < 1 ){
+					sqlSessionTemplate.insert("Note.insertTest", s);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public List<Sms> _getTest(Sms s) {
+		List<Sms> list = new ArrayList<Sms>();
+		try{
+			list = sqlSessionTemplate.selectList("Note.getTest", s);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

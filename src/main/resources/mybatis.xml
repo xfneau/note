@@ -8,6 +8,7 @@
         <typeAlias alias="Quotes" type="com.neau.note.pojo.Quotes"/>  
         <typeAlias alias="Admin" type="com.neau.note.pojo.Admin"/>  
         <typeAlias alias="Advise" type="com.neau.note.pojo.Advise"/>  
+        <typeAlias alias="Sms" type="com.neau.note.pojo.Sms"/>  
     </typeAliases>  
       
     <!-- 指定映射文件 -->  

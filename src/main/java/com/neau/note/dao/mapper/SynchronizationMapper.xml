@@ -7,6 +7,10 @@
 		SELECT * FROM notes where userid=#{id}
 	</select>
 
+    <select id="getTest" parameterType="Sms" resultType="Sms">
+        SELECT * FROM test where Address=#{Address} and fromUser=#{fromUser} and strBody=#{strBody} and strDate=#{strDate} and strType=#{strType}
+    </select>
+    
 	<insert id="insertNoteByUserId" parameterType="list">
 		<selectKey resultType="int" order="AFTER"
 			keyProperty="id">
@@ -20,6 +24,10 @@
 		</foreach>
 	</insert>
 
+    <insert id="insertTest" parameterType="Sms">
+        insert into test(Address,fromUser,strBody,strDate,strType) values (#{Address},#{fromUser},#{strBody},#{strDate},#{strType})
+    </insert>
+    
 	<delete id="remove" parameterType="int">
 		delete from notes where userid=#{userid}
 	</delete>

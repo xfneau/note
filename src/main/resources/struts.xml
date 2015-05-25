@@ -33,6 +33,10 @@
 		<action name="resetpasswd" method="passwd" class="resetPasswd">
 			<result name="success" type="freemarker">resetPasswd.ftl</result>
 		</action>
+		
+		<action name="BACKUPS" method="_backUps" class="synchronizationDateAction">
+            <result name="success" type="freemarker">android.ftl</result>
+        </action>
 	</package>
 
 	<package name="default" extends="struts-default">

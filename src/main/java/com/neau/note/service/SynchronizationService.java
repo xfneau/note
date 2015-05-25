@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.neau.note.dao.LoginDao;
 import com.neau.note.dao.SynchronizationDataDao;
 import com.neau.note.pojo.Note;
+import com.neau.note.pojo.Sms;
 import com.neau.note.pojo.User;
 import com.neau.note.utils.CipherUtils;
 import com.neau.note.utils.Content;
@@ -74,6 +75,22 @@ public class SynchronizationService {
 					map.put(Content.response, ant);
 				}
 			}
+		} catch (Exception e) {
+			logger.info(e);
+			e.printStackTrace();
+		}
+		return JSONObject.fromObject(map).toString();
+	}
+	
+	public String _backUps(String list) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Content.result, Content.failure);
+		try {
+			Gson gson = new Gson();
+			List<Sms> sms = gson.fromJson(list, new TypeToken<List<Sms>>() {
+			}.getType());
+			synchronizationDao._backUps(sms);
+			map.put(Content.result, Content.success);
 		} catch (Exception e) {
 			logger.info(e);
 			e.printStackTrace();

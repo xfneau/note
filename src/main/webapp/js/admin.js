@@ -78,6 +78,7 @@ var admin = {
 			});
 		});
 		$("#search").click(function(){
+			console.log("serarch");
 			var searchUser = $("#searchUser").val();
 			$.post("ajax/searchUser",{"context":searchUser},function(result){
 				var json = eval("("+result+")");
