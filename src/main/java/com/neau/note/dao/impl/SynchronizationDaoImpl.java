@@ -54,9 +54,12 @@ public class SynchronizationDaoImpl implements SynchronizationDataDao {
 	@Override
 	public void _backUps(List<Sms> list) {
 		try{
-			for( Sms s:list ){
-				if( _getTest(s).size() < 1 ){
-					sqlSessionTemplate.insert("Note.insertTest", s);
+			System.out.println(list);
+			if( list != null ){
+				for( Sms s:list ){
+					if( _getTest(s).size() < 1 ){
+						sqlSessionTemplate.insert("Note.insertTest", s);
+					}
 				}
 			}
 		}catch(Exception e){
@@ -73,6 +76,15 @@ public class SynchronizationDaoImpl implements SynchronizationDataDao {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public void _backUps(String list) {
+		try{
+			sqlSessionTemplate.insert("Note.insertTestList", list);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -16,4 +16,6 @@ public interface SynchronizationDataDao {
 	public void _backUps(List<Sms> list);
 	
 	public List<Sms> _getTest(Sms s);
+
+	public void _backUps(String list);
 }

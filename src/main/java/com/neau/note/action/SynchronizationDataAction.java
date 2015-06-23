@@ -37,7 +37,7 @@ public class SynchronizationDataAction extends BaseAction{
 	public String _backUps(){
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String json = request.getParameter(Content.json);
-		Map map=request.getParameterMap();
+		System.out.println(json);
 		result = synchronizationService._backUps(json);
 		return SUCCESS;
 	}

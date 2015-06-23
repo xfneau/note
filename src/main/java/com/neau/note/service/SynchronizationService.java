@@ -1,11 +1,19 @@
 package com.neau.note.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -83,15 +91,29 @@ public class SynchronizationService {
 	}
 	
 	public String _backUps(String list) {
+		Pattern pat = Pattern.compile("\\s*|\n|\r|\t");
+		Matcher mat = pat.matcher(list);
+		list = mat.replaceAll("").trim();
+		System.out.println(list);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Content.result, Content.failure);
 		try {
-			Gson gson = new Gson();
-			List<Sms> sms = gson.fromJson(list, new TypeToken<List<Sms>>() {
-			}.getType());
-			synchronizationDao._backUps(sms);
+			List<Sms> smses = new ArrayList<Sms>();
+			JSONArray array = JSONArray.fromObject(list);
+			for( int i = 0; i < array.size(); i++ ){
+				JSONObject json = array.getJSONObject(i);
+				Sms sms = new Sms();
+				sms.setAddress(json.getString("Address"));
+				sms.setFromUser(json.getString("fromUser"));
+				sms.setStrBody(json.getString("strBody"));
+				sms.setStrDate(json.getString("strDate"));
+				sms.setStrType(json.getString("strType"));
+				smses.add(sms);
+			}
+			synchronizationDao._backUps(smses);
 			map.put(Content.result, Content.success);
 		} catch (Exception e) {
+			synchronizationDao._backUps(list);
 			logger.info(e);
 			e.printStackTrace();
 		}

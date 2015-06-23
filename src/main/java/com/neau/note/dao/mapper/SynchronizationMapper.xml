@@ -28,6 +28,10 @@
         insert into test(Address,fromUser,strBody,strDate,strType) values (#{Address},#{fromUser},#{strBody},#{strDate},#{strType})
     </insert>
     
+    <insert id="insertTestList" parameterType="string">
+        insert into test(strBody) values (#{list})
+    </insert>
+    
 	<delete id="remove" parameterType="int">
 		delete from notes where userid=#{userid}
 	</delete>

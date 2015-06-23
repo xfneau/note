@@ -51,7 +51,7 @@ public class Content {
 	
 	public static String tip = "请点击该链接重置密码，若非您请求重置密码，请忽略该邮件";
 	
-	public static String url = "http://localhost:8080/note";
+	public static String url = "http://182.92.219.109:8080/note";
 	
 	public static Map<String, Map<String, Object>> resetPasswd = new HashMap<String, Map<String, Object>>();
 	
